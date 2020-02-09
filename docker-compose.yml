@@ -1,0 +1,37 @@
+version: "3"
+services:
+  notebook:
+    build:
+      context: ./notebook
+    volumes:
+      - ./notebook:/app
+    ports:
+      - "8888:8888"
+    env_file:
+      - .env
+    depends_on:
+      - database
+  app:
+    build:
+      context: ./api
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./api:/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database
+    env_file:
+      - .env
+  database:
+    image: postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

@@ -1,5 +1,11 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
+from sqlalchemy import create_engine
+import pandas as pd
+import numpy as np
+from sklearn import datasets
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 
 import joblib
 import numpy as np
@@ -20,10 +26,11 @@ def predict():
     specimen = np.array( [ args['sepal_length'], args['sepal_width'], args['petal_length'], args['petal_width'] ] )
 
     choices = ['setosa', 'versicolor', 'virginica']
-    loaded_model = joblib.load(open('iris_random_forest.sav', 'rb'))
+    loaded_model = joblib.load(open('random_forest', 'rb'))
 
     pred_value = loaded_model.predict(np.array([specimen]))
     prediction = choices[pred_value[0]]
+
     return {'prediction': prediction}
 
 if __name__ == '__main__':
